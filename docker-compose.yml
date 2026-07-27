@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: metalcast-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: metalcast
+      POSTGRES_PASSWORD: metalcast
+      POSTGRES_DB: metalcast
+    volumes:
+      - metalcast-pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metalcast -d metalcast"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: metalcast-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://metalcast:metalcast@postgres:5432/metalcast
+      HOST: 0.0.0.0
+      PORT: "8000"
+      LOG_LEVEL: INFO
+      CORS_ORIGINS: "*"
+      # -------- Fill these in from your .env if you have keys --------
+      ADMIN_TOKEN: ${ADMIN_TOKEN:-change-me-please}
+      METALS_DEV_API_KEY: ${METALS_DEV_API_KEY:-}
+      METALPRICE_API_KEY: ${METALPRICE_API_KEY:-}
+      COMMODITIES_API_KEY: ${COMMODITIES_API_KEY:-}
+      NEWSAPI_KEY: ${NEWSAPI_KEY:-}
+      GNEWS_API_KEY: ${GNEWS_API_KEY:-}
+      MARKETAUX_API_KEY: ${MARKETAUX_API_KEY:-}
+      ALLOW_SYNTHETIC: ${ALLOW_SYNTHETIC:-false}
+      BACKFILL_DAYS_ON_BOOT: ${BACKFILL_DAYS_ON_BOOT:-900}
+    ports:
+      - "8000:8000"
+
+volumes:
+  metalcast-pgdata:

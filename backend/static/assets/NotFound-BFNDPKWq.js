@@ -1,0 +1,6 @@
+import{j as t}from"./motion-BXvsjsIm.js";import{L as e}from"./react-BFCt9Bph.js";import{P as s}from"./Panel-Pia3gb87.js";import{c as a,B as o,A as i}from"./index-DEzD4lPd.js";import"./charts-CDUKmea7.js";/**
+ * @license lucide-react v0.469.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const r=a("Compass",[["path",{d:"m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z",key:"9ktpf1"}],["circle",{cx:"12",cy:"12",r:"10",key:"1mglay"}]]);function d(){return t.jsx("div",{className:"mx-auto max-w-lg py-10",children:t.jsxs(s,{bodyClassName:"p-8 text-center",children:[t.jsx(r,{size:28,className:"mx-auto text-patina",strokeWidth:1.5}),t.jsx("h1",{className:"mt-4 font-display text-2xl font-semibold text-ink",children:"Off the map"}),t.jsx("p",{className:"mt-2 text-[13px] leading-relaxed text-muted",children:"This route does not exist in MetalCast. The dashboard, the two metals, forecasts, history, news and system are the whole of it."}),t.jsx("div",{className:"mt-5 flex justify-center gap-2",children:t.jsx(e,{to:"/",children:t.jsx(o,{variant:"primary",icon:i,iconPosition:"right",children:"Back to the board"})})})]})})}export{d as default};

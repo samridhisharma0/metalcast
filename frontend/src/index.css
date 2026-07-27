@@ -1,0 +1,208 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Palette — "oxidised metal at the close of trading".
+   Graphite surfaces, copper-patina teal as the interface accent, and the two
+   metals keep their own true colours (copper brown, aluminium cool silver) so
+   a series never needs a legend to be identified.
+   ========================================================================== */
+:root,
+html[data-theme='dark'] {
+  --c-base: #0c0f13;
+  --c-panel: #14181e;
+  --c-raised: #191f27;
+  --c-line: #242b35;
+  --c-line-soft: #1b212a;
+  --c-ink: #e9eef4;
+  --c-muted: #8a97a6;
+  --c-faint: #5b6774;
+  --c-patina: #2fa39b;
+  --c-patina-deep: #1d6f69;
+  --c-patina-wash: rgba(47, 163, 155, 0.18);
+  --c-copper: #c1743a;
+  --c-aluminium: #8fa8c8;
+  --c-up: #3fb98a;
+  --c-down: #e15b6b;
+  --c-amber: #e8a33d;
+  --c-up-wash: rgba(63, 185, 138, 0.18);
+  --c-down-wash: rgba(225, 91, 107, 0.18);
+  --c-grid: rgba(255, 255, 255, 0.05);
+  --c-scrim: rgba(8, 10, 13, 0.72);
+  color-scheme: dark;
+}
+
+html[data-theme='light'] {
+  --c-base: #f2f3f0;
+  --c-panel: #ffffff;
+  --c-raised: #f7f8f6;
+  --c-line: #d9ddd7;
+  --c-line-soft: #e7eae5;
+  --c-ink: #12171c;
+  --c-muted: #5c6874;
+  --c-faint: #8b959f;
+  --c-patina: #17756f;
+  --c-patina-deep: #0f524e;
+  --c-patina-wash: rgba(23, 117, 111, 0.12);
+  --c-copper: #a05a25;
+  --c-aluminium: #556f8f;
+  --c-up: #1e8d63;
+  --c-down: #c0374a;
+  --c-amber: #b4761a;
+  --c-up-wash: rgba(30, 141, 99, 0.14);
+  --c-down-wash: rgba(192, 55, 74, 0.14);
+  --c-grid: rgba(18, 23, 28, 0.07);
+  --c-scrim: rgba(255, 255, 255, 0.75);
+  color-scheme: light;
+}
+
+* {
+  border-color: var(--c-line);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--c-base);
+  color: var(--c-ink);
+  font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* A faint horizontal rule field — the ledger paper of a trading floor. */
+  background-image: linear-gradient(var(--c-line-soft) 1px, transparent 1px);
+  background-size: 100% 88px;
+  background-attachment: fixed;
+}
+
+/* Numbers are data, and data is monospaced. Always tabular so digits do not
+   jitter when a price ticks. */
+.tnum {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'zero' 1;
+}
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--c-faint);
+}
+
+.panel {
+  background: var(--c-panel);
+  border: 1px solid var(--c-line);
+  border-radius: 0.875rem;
+  box-shadow: 0 12px 32px -26px rgba(0, 0, 0, 0.8);
+}
+
+.hairline {
+  height: 1px;
+  background: var(--c-line);
+}
+
+/* focus visibility is not optional */
+:focus-visible {
+  outline: 2px solid var(--c-patina);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--c-patina-wash);
+  color: var(--c-ink);
+}
+
+/* scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-line);
+  border-radius: 999px;
+  border: 2px solid var(--c-base);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-faint);
+}
+
+/* recharts hygiene */
+.recharts-wrapper:focus,
+.recharts-surface:focus {
+  outline: none;
+}
+.recharts-cartesian-axis-tick text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10.5px;
+  fill: var(--c-faint);
+}
+.recharts-cartesian-grid line {
+  stroke: var(--c-grid);
+}
+.recharts-default-legend {
+  font-size: 12px !important;
+}
+
+/* skeleton shimmer */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-raised);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--c-line), transparent);
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Respect the user's motion preference everywhere, including framer-motion's
+   transform work. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
