@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "name": "metalcast",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build"
+  }
+}
