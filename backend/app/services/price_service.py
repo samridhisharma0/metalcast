@@ -33,7 +33,7 @@ class PriceService:
         self._lock = asyncio.Lock()
         self._subscribers: List[asyncio.Queue] = []
 
-    # ---------------- lifecycle ----------------
+    
     async def start(self) -> None:
         self._client = httpx.AsyncClient(
             timeout=httpx.Timeout(12.0, connect=6.0),
@@ -502,7 +502,7 @@ class PriceService:
         return out
 
 
-# --------------------------------------------------------------------------- #
+
 def _f(v: Any) -> Optional[float]:
     if v is None:
         return None

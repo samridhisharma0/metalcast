@@ -191,9 +191,6 @@ CREATE TABLE IF NOT EXISTS job_runs (
 
 CREATE INDEX IF NOT EXISTS idx_jobs_name_started ON job_runs (job_name, started_at DESC);
 
--- ---------------------------------------------------------------------------
--- 8. Views
--- ---------------------------------------------------------------------------
 CREATE OR REPLACE VIEW v_latest_price AS
 SELECT DISTINCT ON (t.metal_id)
        t.metal_id,
