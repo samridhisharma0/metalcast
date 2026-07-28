@@ -7,15 +7,18 @@ import {
   Command,
   Database,
   LineChart,
+  LogOut,
   Menu,
   Moon,
   Newspaper,
   Radio,
   Sun,
+  User,
   Wifi,
   WifiOff,
   X,
 } from 'lucide-react'
+import { useAuth } from '../../hooks/useAuth'
 import { useTheme } from '../../hooks/useTheme'
 import { useIsMobile } from '../../hooks/useMediaQuery'
 import { cn } from '../../lib/cn'
@@ -115,6 +118,7 @@ function StreamPill({ streamState, asOf }) {
 }
 
 export function Shell({ children, streamState = 'connecting', asOf, onOpenPalette }) {
+  const { user, logout } = useAuth()
   const { theme, toggle } = useTheme()
   const isMobile = useIsMobile()
   const [drawer, setDrawer] = useState(false)
@@ -195,6 +199,27 @@ export function Shell({ children, streamState = 'connecting', asOf, onOpenPalett
               <div className="mt-6 flex-1">
                 <NavItems onNavigate={() => setDrawer(false)} />
               </div>
+              {user && (
+                <div className="flex items-center justify-between border-t border-line pt-3 px-1.5">
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full border border-line bg-raised text-[11px] font-semibold text-patina">
+                      {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                    </div>
+                    <div>
+                      <div className="text-[12px] font-medium text-ink truncate">{user.name}</div>
+                      <div className="text-[10px] text-faint truncate">{user.email}</div>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="rounded-md border border-line p-1.5 text-muted transition-colors hover:border-down hover:text-down"
+                    aria-label="Sign out"
+                  >
+                    <LogOut size={14} />
+                  </button>
+                </div>
+              )}
               <p className="px-1.5 text-[10.5px] leading-relaxed text-faint">
                 Forecasts are statistical estimates with stated uncertainty. Not investment advice.
               </p>
@@ -248,6 +273,22 @@ export function Shell({ children, streamState = 'connecting', asOf, onOpenPalett
               >
                 {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
               </button>
+              {user && (
+                <div className="flex items-center gap-1.5">
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full border border-line bg-raised text-[11px] font-semibold text-patina">
+                    {user.name?.charAt(0)?.toUpperCase() || user.email?.charAt(0)?.toUpperCase() || 'U'}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={logout}
+                    className="rounded-md border border-line p-1.5 text-muted transition-colors hover:border-down hover:text-down"
+                    aria-label="Sign out"
+                    title="Sign out"
+                  >
+                    <LogOut size={14} />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </header>

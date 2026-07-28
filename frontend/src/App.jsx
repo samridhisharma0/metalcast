@@ -1,7 +1,8 @@
 import { lazy, Suspense, useState } from 'react'
-import { Route, Routes, useLocation } from 'react-router-dom'
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useQueryClient } from '@tanstack/react-query'
+import { useAuth } from './hooks/useAuth'
 import { Shell } from './components/layout/Shell'
 import { CommandPalette } from './components/layout/CommandPalette'
 import { Toaster } from './components/ui/Toaster'
@@ -15,6 +16,7 @@ const Forecasts = lazy(() => import('./pages/Forecasts'))
 const News = lazy(() => import('./pages/News'))
 const History = lazy(() => import('./pages/History'))
 const System = lazy(() => import('./pages/System'))
+const Login = lazy(() => import('./pages/Login'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 
 function PageFallback() {
@@ -54,6 +56,7 @@ function RoutedApp({ live }) {
 }
 
 export default function App() {
+  const { user } = useAuth()
   const live = useLivePrices()
   const [paletteOpen, setPaletteOpen] = useState(false)
   const qc = useQueryClient()
@@ -63,7 +66,6 @@ export default function App() {
     setPaletteOpen((v) => !v)
   })
   useHotkey('/', (e) => {
-    // Only trigger when not already inside an input, so search boxes still work.
     const tag = document.activeElement?.tagName
     if (tag === 'INPUT' || tag === 'TEXTAREA') return
     e.preventDefault()
@@ -72,18 +74,39 @@ export default function App() {
 
   return (
     <>
-      <Shell
-        streamState={live.streamState}
-        asOf={live.asOf}
-        onOpenPalette={() => setPaletteOpen(true)}
-      >
-        <RoutedApp live={live} />
-      </Shell>
-      <CommandPalette
-        open={paletteOpen}
-        onClose={() => setPaletteOpen(false)}
-        onRefresh={() => qc.invalidateQueries()}
-      />
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <Suspense fallback={<PageFallback />}>
+              <Login />
+            </Suspense>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            user ? (
+              <Shell
+                streamState={live.streamState}
+                asOf={live.asOf}
+                onOpenPalette={() => setPaletteOpen(true)}
+              >
+                <RoutedApp live={live} />
+              </Shell>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+      {user && (
+        <CommandPalette
+          open={paletteOpen}
+          onClose={() => setPaletteOpen(false)}
+          onRefresh={() => qc.invalidateQueries()}
+        />
+      )}
       <Toaster />
     </>
   )
